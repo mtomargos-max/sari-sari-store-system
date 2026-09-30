@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sari-Sari Store System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-store"></i> Sari-Sari Store System
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="showSection('dashboard')" class="active">Dashboard</a></li>
+                <li><a href="#" onclick="showSection('sales')">Sales</a></li>
+                <li><a href="#" onclick="showSection('inventory')">Inventory</a></li>
+                <li><a href="#" onclick="showSection('reports')">Reports</a></li>
+                <li><a href="#" onclick="showSection('settings')">Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <div class="section-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome to Sari-Sari Store System</p>
+                </div>
+
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Today's Sales</h3>
+                            <p class="card-value" id="todaySales">₱0.00</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Total Items</h3>
+                            <p class="card-value" id="totalItems">0</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Low Stock Items</h3>
+                            <p class="card-value" id="lowStockItems">0</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Weekly Revenue</h3>
+                            <p class="card-value" id="weeklyRevenue">₱0.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Section -->
+            <div id="sales" class="section">
+                <div class="section-header">
+                    <h1>Sales Management</h1>
+                </div>
+
+                <div class="sales-container">
+                    <div class="sales-form">
+                        <h2>New Sale</h2>
+                        <form id="saleForm">
+                            <div class="form-group">
+                                <label>Select Product</label>
+                                <select id="productSelect" onchange="addProductToCart()">
+                                    <option value="">-- Choose Product --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="number" id="quantityInput" min="1" value="1">
+                            </div>
+
+                            <button type="button" class="btn btn-primary" onclick="addToCart()">Add to Cart</button>
+                        </form>
+                    </div>
+
+                    <div class="cart-section">
+                        <h2>Cart</h2>
+                        <div class="cart-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cartBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="cart-summary">
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">₱0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Discount (%):</span>
+                                <input type="number" id="discountPercent" min="0" max="100" value="0" onchange="calculateCart()">
+                            </div>
+                            <div class="summary-row">
+                                <span>Discount Amount:</span>
+                                <span id="discountAmount">₱0.00</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Grand Total:</span>
+                                <span id="grandTotal">₱0.00</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success" onclick="completeSale()">Complete Sale</button>
+                        <button class="btn btn-secondary" onclick="clearCart()">Clear Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Section -->
+            <div id="inventory" class="section">
+                <div class="section-header">
+                    <h1>Inventory Management</h1>
+                </div>
+
+                <div class="inventory-controls">
+                    <button class="btn btn-primary" onclick="showAddProductModal()">Add New Product</button>
+                    <input type="text" id="searchInventory" placeholder="Search products..." onkeyup="searchInventory()">
+                </div>
+
+                <div class="inventory-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Reorder Level</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="reports" class="section">
+                <div class="section-header">
+                    <h1>Reports</h1>
+                </div>
+
+                <div class="report-filters">
+                    <div class="filter-group">
+                        <label>Report Type:</label>
+                        <select id="reportType" onchange="generateReport()">
+                            <option value="daily">Daily Sales</option>
+                            <option value="weekly">Weekly Sales</option>
+                            <option value="monthly">Monthly Sales</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Date Range:</label>
+                        <input type="date" id="startDate" onchange="generateReport()">
+                        <input type="date" id="endDate" onchange="generateReport()">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                    <button class="btn btn-secondary" onclick="printReport()">Print</button>
+                </div>
+
+                <div id="reportContent" class="report-content">
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="section">
+                <div class="section-header">
+                    <h1>Settings & Price Management</h1>
+                </div>
+
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h2>Price Management</h2>
+                        <form id="priceForm">
+                            <div class="form-group">
+                                <label>Select Product</label>
+                                <select id="priceProductSelect" onchange="loadProductPrice()">
+                                    <option value="">-- Choose Product --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Current Price</label>
+                                <input type="number" id="currentPrice" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>New Price</label>
+                                <input type="number" id="newPrice" min="0" step="0.01">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Adjustment Type</label>
+                                <select id="adjustmentType">
+                                    <option value="fixed">Fixed Amount</option>
+                                    <option value="percentage">Percentage</option>
+                                </select>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" onclick="changePrice()">Update Price</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Stock Adjustment</h2>
+                        <form id="stockForm">
+                            <div class="form-group">
+                                <label>Select Product</label>
+                                <select id="stockProductSelect" onchange="loadProductStock()">
+                                    <option value="">-- Choose Product --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Current Stock</label>
+                                <input type="number" id="currentStock" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Adjustment Amount</label>
+                                <input type="number" id="adjustmentAmount" min="0">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Reason</label>
+                                <select id="adjustmentReason">
+                                    <option value="restock">Restock</option>
+                                    <option value="damage">Damage</option>
+                                    <option value="lost">Lost/Stolen</option>
+                                    <option value="expiry">Expiry</option>
+                                    <option value="correction">Inventory Correction</option>
+                                </select>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" onclick="adjustStock()">Update Stock</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddProductModal()">&times;</span>
+            <h2>Add New Product</h2>
+            <form id="addProductForm" onsubmit="addProduct(event)">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="productName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" id="productCategory" placeholder="e.g., Beverages, Snacks" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Unit Price</label>
+                    <input type="number" id="productPrice" min="0" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Initial Quantity</label>
+                    <input type="number" id="productQuantity" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Reorder Level</label>
+                    <input type="number" id="reorderLevel" min="0" required>
+                </div>
+
+                <button type="submit" class="btn btn-success">Add Product</button>
+                <button type="button" class="btn btn-secondary" onclick="closeAddProductModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
